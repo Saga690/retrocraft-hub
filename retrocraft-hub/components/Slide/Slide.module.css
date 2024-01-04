@@ -1,0 +1,14 @@
+.slide{
+    padding: 50px;
+    /* background-color: rgb(206, 220, 212); */
+    display: flex;
+    justify-content: center;
+    /* position: ; */
+    /* display: flex; */
+}
+
+.container{
+    width: 1400px;
+    /* position:relative; */
+    /* background-color: black; */
+}

@@ -7,6 +7,7 @@ import gigRoute from "./routes/gig.route.js";
 import messageRoute from "./routes/message.route.js";
 import offerRoute from "./routes/offer.route.js";
 import reviewRoute from "./routes/review.route.js";
+import authRoute from "./routes/auth.route.js";
 
 dotenv.config();
 
@@ -21,6 +22,9 @@ const connectToDB = async () => {
     }
 }
 
+app.use(express.json());
+
+app.use("/api/auth", authRoute)
 app.use("/api/users", userRoute);
 app.use("/api/gigs", gigRoute);
 app.use("/api/offers", offerRoute);

@@ -14,11 +14,11 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: false,
+        required: true,
     },
     img: {
         type: String,
-        required: true,
+        required: false,
     },
     country: {
         type: String,

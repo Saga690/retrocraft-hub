@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 
 
@@ -41,8 +42,17 @@ export const login = async (req, res) => {
             return res.status(400).send("Wrong Password or Username");
         }
 
-        const {password, ...info} = user._doc;
-        res.status(200).send(info);
+        const token = jwt.sign({
+            id: user._id,
+            isSeller: user.isSeller,
+        },
+            process.env.JWT_KEY
+        );
+
+        const { password, ...info } = user._doc;
+        res.cookie("accessToken", token, {
+            httpOnly: true,
+        }).status(200).send(info);
 
     } catch (error) {
         res.status(500).send("Something went wrong!");

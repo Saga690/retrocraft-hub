@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+
 import userRoute from "./routes/user.route.js";
 import conversationRoute from "./routes/conversation.route.js";
 import gigRoute from "./routes/gig.route.js";
@@ -23,6 +25,7 @@ const connectToDB = async () => {
 }
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoute)
 app.use("/api/users", userRoute);

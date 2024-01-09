@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import styles from '@/styles/Login.module.css'
-import axios from 'axios';
+import newRequest from '@/utils/newRequest';
+import { useRouter } from 'next/router'
+
 
 const login = () => {
 
@@ -8,13 +10,17 @@ const login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
 
+    const router = useRouter();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const res = await axios.post("http://localhost:8800/api/auth/login", { username, password, }, { withCredentials: true });
+            const res = await newRequest.post("/auth/login", { username, password });
+            localStorage.setItem("currentUser", JSON.stringify(res.data));
+            router.push("/");
         } catch (err) {
-            setError(err);
+            setError(err.response.data);
         }
     }
     return (
@@ -26,6 +32,7 @@ const login = () => {
                 <label className={styles.label} htmlFor="">Password</label>
                 <input className={styles.input} name="password" type="password" onChange={e => setPassword(e.target.value)} />
                 <button className={styles.btn} type="submit">Login</button>
+                {error && error}
             </form>
         </div>
     )

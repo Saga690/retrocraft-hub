@@ -10,6 +10,7 @@ const navbar = () => {
 
     const [active, setActive] = useState(false);
     const [open, setOpen] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
 
     const isActive = () => {
         window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -22,16 +23,30 @@ const navbar = () => {
         }
     }, []);
 
+
+
+    useEffect(() => {
+        const userloc = JSON.parse(localStorage.getItem("currentUser"));
+        setCurrentUser(userloc);
+    }, [])
+
     // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    const currentUser = null;
+    // const currentUser = null;
+
+    // if (typeof window !== "undefined") {
+    //     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    // }
 
     // const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
             await newRequest.post("auth/logout");
+            setCurrentUser(null);
+            // useEffect(() => {
             localStorage.setItem("currentUser", null);
+            // }, []);
             router.push("/");
         } catch (error) {
             console.log(error);
@@ -66,7 +81,7 @@ const navbar = () => {
                                 }
                                 <Link className={styles.link} href="/offers">Offers</Link>
                                 <Link className={styles.link} href="/messages">Messages</Link>
-                                <Link className={styles.link} onClick={handleLogout}>Logout</Link>
+                                <a className={styles.link} onClick={handleLogout}>Logout</a>
                             </div>}
                         </div>
                     )}

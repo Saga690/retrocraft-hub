@@ -12,7 +12,7 @@ This project was developed using HTML, vanilla CSS, JS, ReactJS and NextJS for c
 1. Clone this repository.
    ```
    git clone https://github.com/Saga690/retrocraft-hub.git
-   ```i
+   ```
 2. Change the directory into this folder.
    ```
    cd retrocraft-hub

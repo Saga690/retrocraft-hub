@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import styles from '@/styles/Register.module.css';
+import upload from '@/utils/upload';
+import newRequest from '@/utils/newRequest';
+import { useRouter } from 'next/router';
 
 const register = () => {
+
+    const router = useRouter();
 
     const [file, setFile] = useState(null);
     const [user, setUser] = useState({
@@ -14,7 +19,8 @@ const register = () => {
         desc: "",
     });
 
-    console.log(user);
+    // console.log(user);
+
 
     const handleChange = (e) => {
         setUser(prev => {
@@ -28,9 +34,24 @@ const register = () => {
         });
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const url = await upload(file);
+
+        try {
+            await newRequest.post("/auth/register", {
+                ...user,
+                img: url,
+            })
+            router.push("/");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className={styles.register}>
-            <form className={styles.form}>
+            <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.left}>
                     <h1 className={styles.h1}>Create a new account</h1>
                     <label className={styles.label} htmlFor="">Username</label>

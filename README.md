@@ -43,6 +43,6 @@ This project was developed using HTML, vanilla CSS, JS, ReactJS and NextJS for c
     npm run dev
     ```
 10. View the application on your browser.
-   ```
-   http://localhost:3000
-   ```
+    ```
+    http://localhost:3000
+    ```

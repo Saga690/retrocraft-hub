@@ -47,7 +47,7 @@ const navbar = () => {
             // useEffect(() => {
             localStorage.setItem("currentUser", null);
             // }, []);
-            router.push("/");
+            router.push("/login");
         } catch (error) {
             console.log(error);
         }

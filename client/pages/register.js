@@ -43,7 +43,7 @@ const register = () => {
                 ...user,
                 img: url,
             })
-            router.push("/");
+            router.push("/login");
         } catch (error) {
             console.log(error);
         }

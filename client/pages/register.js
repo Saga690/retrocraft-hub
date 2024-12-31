@@ -20,7 +20,7 @@ const register = () => {
     });
 
     // console.log(user);
-
+    
 
     const handleChange = (e) => {
         setUser(prev => {

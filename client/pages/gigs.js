@@ -1,17 +1,54 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from '@/styles/Gigs.module.css'
 import GigCard from '@/components/GigCard/gigCard';
-import { gigsdata } from './api/data';
+// import { gigsdata } from './api/data';
+import { useQuery } from '@tanstack/react-query';
+import newRequest from '@/utils/newRequest';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+// import { useLocation } from 'react-router-dom';
 
 const Gigs = () => {
 
   const [open, setOpen] = useState(false);
   const [sort, setSort] = useState("sales");
+  const minRef = useRef();
+  const maxRef = useRef();
+
+  const router = useRouter();
+  const { query } = router;
+
+  const queryStringified = "?" + queryString.stringify(query);
+
+  console.log(queryStringified);
+  // const location = useLocation();
+
+  console.log(router.query);
+
+  // const queryString = `?min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`;
+
+  const { isLoading, error, data, refetch } = useQuery({
+    queryKey: ['repoData'],
+    queryFn: () =>
+      newRequest.get(`/gigs`).then(res => {
+        return res.data;
+      })
+  })
+
+  console.log(data);
 
   const reSort = (type) => {
     setSort(type);
     setOpen(false);
   }
+
+  useEffect(() => {
+    refetch();
+  }, [sort]);
+
+  const apply = () => {
+    refetch();
+  };
 
   return (
     <div className={styles.gigs}>
@@ -24,9 +61,9 @@ const Gigs = () => {
         <div className={styles.menu}>
           <div className={styles.left}>
             <span>Budget</span>
-            <input className={styles.input} type="text" placeholder="min" />
-            <input className={styles.input} type="text" placeholder="max" />
-            <button className={styles.btn}>Apply</button>
+            <input className={styles.input} ref={minRef} type="text" placeholder="min" />
+            <input className={styles.input} ref={maxRef} type="text" placeholder="max" />
+            <button className={styles.btn} onClick={apply}>Apply</button>
           </div>
           <div className={styles.right}>
             <span className={styles.sortBy}>Sort By:</span>
@@ -42,9 +79,9 @@ const Gigs = () => {
           </div>
         </div>
         <div className={styles.cards}>
-          {gigsdata.map( gig => (
-            <GigCard key={gig.id} item={gig} />
-          )) }
+          {isLoading ? "loading" : error ? "Something went wrong!" : data.map(gig => (
+            <GigCard key={gig._id} item={gig} />
+          ))}
         </div>
       </div>
     </div>

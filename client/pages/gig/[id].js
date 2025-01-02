@@ -1,44 +1,67 @@
 import React from 'react'
 import styles from '@/styles/Gig.module.css'
+import { useParams } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query';
+import newRequest from '@/utils/newRequest';
 
 const Gig = () => {
+
+  const params = useParams();
+
+  const id = params.id;
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['gig'],
+    queryFn: () =>
+      newRequest.get(`/gigs/single/${id}`).then(res => {
+        return res.data;
+      })
+  })
+
+  const { isLoading: isLoadingUser, error: errorUser, data: dataUser } = useQuery({
+    queryKey: ['user'],
+    queryFn: () =>
+      newRequest.get(`/users/${data.userId}`).then(res => {
+        return res.data;
+      })
+  })
+
   return (
     <div className={styles.gig}>
-      <div className={styles.container}>
+      {isLoading ? "loading..." : error ? "Something went wrong!" : <div className={styles.container}>
         <div className={styles.left}>
           <span className={styles.loc}>RetroCraft &gt; GRAPHICS & DESIGN &gt; </span>
-          <h1>I will create AI generated artwork for you</h1>
-          <div className={styles.user}>
-            <img className={styles.pp} src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=600" alt="" />
-            <span className={styles.username}>Charan Kumar</span>
-            <div className={styles.stars}>
-              <img src="/star.png" alt="" width={14} />
-              <img src="/star.png" alt="" width={14} />
-              <img src="/star.png" alt="" width={14} />
-              <img src="/star.png" alt="" width={14} />
-              <img src="/star.png" alt="" width={14} />
-              <span className={styles.span1}>5</span>
+          <h1>{data.title}</h1>
+          {isLoadingUser ? "loading..." : errorUser ? "Something went wrong!" : <div className={styles.user}>
+            <img className={styles.pp} src={dataUser.img || "https://www.webinarleads4you.com/wp-content/uploads/2017/02/no-avatar-350x350-300x300.jpg"} alt="" />
+            <span className={styles.username}>{dataUser.username}</span>
+            {! isNaN(data.totalStars / data.starNumber) && <div className={styles.stars}>
+              {Array(Math.round(data.totalStars / data.starNumber)).fill().map((item, i) => (
+              <img src="/star.png" alt="" width={14} key={i} />
+              ))}
+              <span className={styles.span1}>{Math.round(data.totalStars / data.starNumber)}</span>
             </div>
-          </div>
+            }
+          </div>}
           <div className={styles.img1}>
-            <img src="https://wallpapercave.com/dwp1x/wp10865011.jpg" alt="" />
+            <img src={data.images[0]} alt="" />
           </div>
           <h2>About This Gig</h2>
-          <p className={styles.p}>I use AI images to create Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus excepturi molestias dolor, minus nobis doloremque debitis facilis, alias consectetur at illo neque laborum aliquam sint porro assumenda perferendis repudiandae natus, eum cum architecto. Accusantium quasi cupiditate nesciunt excepturi quidem adipisci, dicta maiores maxime quaerat. Magnam quis maxime quos a harum?</p>
-          <div className={styles.seller}>
+          <p className={styles.p}>{data.desc}</p>
+          {isLoadingUser ? "loading..." : errorUser ? "Something went wrong!" : <div className={styles.seller}>
             <h2>About The Seller</h2>
             <div className={styles.user}>
-              <img className={styles.pp} src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=600" alt="" width={14} />
+              <img className={styles.pp} src={dataUser.img || "https://www.webinarleads4you.com/wp-content/uploads/2017/02/no-avatar-350x350-300x300.jpg"} alt="" width={14} />
               <div className={styles.info}>
-                <span>Charan Kumar</span>
-                <div className={styles.stars}>
-                  <img src="/star.png" alt="" width={14} />
-                  <img src="/star.png" alt="" width={14} />
-                  <img src="/star.png" alt="" width={14} />
-                  <img src="/star.png" alt="" width={14} />
-                  <img src="/star.png" alt="" width={14} />
-                  <span className={styles.span1}>5</span>
+                <span>{dataUser.username}</span>
+                {! isNaN(data.totalStars / data.starNumber) && 
+                  <div className={styles.stars}>
+                  {Array(Math.round(data.totalStars / data.starNumber)).fill().map((item, i) => (
+                    <img src="/star.png" alt="" width={14} key={i} />
+                  ))}
+                  <span className={styles.span1}>{Math.round(data.totalStars / data.starNumber)}</span>
                 </div>
+                }
                 <button className={styles.btn}>Contact Me</button>
               </div>
             </div>
@@ -46,7 +69,7 @@ const Gig = () => {
               <div className={styles.items}>
                 <div className={styles.item}>
                   <div className={styles.title}>From</div>
-                  <div className={styles.desc}>India</div>
+                  <div className={styles.desc}>{dataUser.country}</div>
                 </div>
                 <div className={styles.item}>
                   <div className={styles.title}>Member Since</div>
@@ -66,9 +89,9 @@ const Gig = () => {
                 </div>
               </div>
               <hr className={styles.hr} />
-              <p className={styles.p}>My name is Charan, I enjoy making Art Images for my Clients</p>
+              <p className={styles.p}>{data.desc}</p>
             </div>
-          </div>
+          </div>}
           <div className={styles.reviews}>
             <h2>Reviews</h2>
             <div className={styles.ritem}>
@@ -161,43 +184,33 @@ const Gig = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.price}>
-            <h3>1 AI Generated Artwork</h3>
-            <h2>$ 59.99</h2>
+            <h3>{data.shortTitle}</h3>
+            <h2>$ {data.price}</h2>
           </div>
           <p className={styles.pr}>
-            I will create a unique high quality image based on the description you give me
+            {data.shortDesc}
           </p>
           <div className={styles.details}>
             <div className={styles.itemr}>
               <img src="https://cdn-icons-png.flaticon.com/128/2088/2088617.png" alt="" height={18} />
-              <span>2 Days Delivery</span>
+              <span>{data.deliveryTime} Days Delivery</span>
             </div>
             <div className={styles.itemr}>
               <img src="https://cdn-icons-png.flaticon.com/128/1265/1265659.png" alt="" height={18} />
-              <span>3 Revisions</span>
+              <span>{data.revisionNumber} Revisions</span>
             </div>
           </div>
           <div className={styles.features}>
-            <div className={styles.itemr1}>
-              <img src="https://cdn-icons-png.flaticon.com/128/5290/5290076.png" alt="" width={10} />
-              <span>Prompt Writing</span>
-            </div>
-            <div className={styles.itemr1}>
-              <img src="https://cdn-icons-png.flaticon.com/128/5290/5290076.png" alt="" width={10} />
-              <span>Artwork Delivery</span>
-            </div>
-            <div className={styles.itemr1}>
-              <img src="https://cdn-icons-png.flaticon.com/128/5290/5290076.png" alt="" width={10} />
-              <span>Image Upscaling</span>
-            </div>
-            <div className={styles.itemr1}>
-              <img src="https://cdn-icons-png.flaticon.com/128/5290/5290076.png" alt="" width={10} />
-              <span>Additional Design</span>
-            </div>
+            {data.features.map((feature) => (
+              <div className={styles.itemr1} key={feature}>
+                <img src="https://cdn-icons-png.flaticon.com/128/5290/5290076.png" alt="" width={10} />
+                <span>{feature}</span>
+              </div>
+            ))}
           </div>
           <button className={styles.btn2}>Continue</button>
         </div>
-      </div>
+      </div>}
     </div>
   )
 }

@@ -15,7 +15,7 @@ const gigCard = ({ item }) => {
       })
 
     return (
-        <Link href="/gig" className={styles.link}>
+        <Link href={`/gig/${item._id}`} className={styles.link}>
             <div className={styles.gigCard}>
                 <img className={styles.img1} src={item.cover} alt="" />
                 <div className={styles.info}>

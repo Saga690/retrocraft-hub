@@ -20,22 +20,21 @@ const Gigs = () => {
 
   const queryStringified = "?" + queryString.stringify(query);
 
-  console.log(queryStringified);
-  // const location = useLocation();
+  // console.log(queryStringified);
 
-  console.log(router.query);
+  // console.log(router.pathname);
 
   // const queryString = `?min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`;
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
-      newRequest.get(`/gigs`).then(res => {
+      newRequest.get(`/gigs${queryStringified}&min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`).then(res => {
         return res.data;
       })
   })
 
-  console.log(data);
+  // console.log(`/gigs${queryStringified}`);
 
   const reSort = (type) => {
     setSort(type);
@@ -79,7 +78,7 @@ const Gigs = () => {
           </div>
         </div>
         <div className={styles.cards}>
-          {isLoading ? "loading" : error ? "Something went wrong!" : data.map(gig => (
+          {isLoading ? "loading..." : error ? "Something went wrong!" : data.map(gig => (
             <GigCard key={gig._id} item={gig} />
           ))}
         </div>

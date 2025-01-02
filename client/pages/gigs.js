@@ -27,7 +27,7 @@ const Gigs = () => {
   // const queryString = `?min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`;
 
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ['repoData'],
+    queryKey: ['gigs'],
     queryFn: () =>
       newRequest.get(`/gigs${queryStringified}&min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`).then(res => {
         return res.data;

@@ -1,21 +1,32 @@
 import React from 'react'
 import styles from './GigCard.module.css'
 import Link from 'next/link'
+import { useQuery } from '@tanstack/react-query';
+import newRequest from '@/utils/newRequest';
 
 const gigCard = ({ item }) => {
+
+    const { isLoading, error, data} = useQuery({
+        queryKey: ['gigUser'],
+        queryFn: () =>
+          newRequest.get(`/users/${item.userId}`).then(res => {
+            return res.data;
+          })
+      })
+
     return (
         <Link href="/gig" className={styles.link}>
             <div className={styles.gigCard}>
-                <img className={styles.img1} src={item.img} alt="" />
+                <img className={styles.img1} src={item.cover} alt="" />
                 <div className={styles.info}>
-                    <div className={styles.user}>
-                        <img className={styles.pp} src={item.pp} alt="" />
-                        <span>{item.username}</span>
-                    </div>
+                    {isLoading ? "loading..." : error ? "Something went wrong!" : <div className={styles.user}>
+                        <img className={styles.pp} src={data.img || "https://th.bing.com/th/id/OIP.pdgwLL8oxjSs9n4AV66x5wHaHa?w=173&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"} alt="" />
+                        <span>{data.username}</span>
+                    </div>}
                     <p className={styles.p}>{item.desc}</p>
                     <div className={styles.star}>
                         <img className={styles.simg} src="/star.png" alt="" />
-                        <span className={styles.sstar}>{item.star}</span>
+                        <span className={styles.sstar}>{! isNaN(item.totalStars / item.starNumber) && Math.round(item.totalStars / item.starNumber)}</span>
                     </div>
                 </div>
                 <hr className={styles.hr} />

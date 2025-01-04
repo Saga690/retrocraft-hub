@@ -20,23 +20,7 @@ const reviewSchema = new Schema({
     desc: {
         type: String,
         required: true,
-    },
-    gigId: {
-        type: String,
-        required: true,
-    },
-    gigId: {
-        type: String,
-        required: true,
-    },
-    gigId: {
-        type: String,
-        required: true,
-    },
-    gigId: {
-        type: String,
-        required: true,
-    },
+    }
 }, {
     timestamps: true,
 });

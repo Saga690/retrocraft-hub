@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from '@/styles/Gig.module.css'
-import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query';
 import newRequest from '@/utils/newRequest';
 import { useRouter } from 'next/router';
+import Reviews from '@/components/Reviews/Reviews';
 
 const Gig = () => {
 
@@ -94,95 +94,7 @@ const Gig = () => {
               <p className={styles.p}>{data.desc}</p>
             </div>
           </div>}
-          <div className={styles.reviews}>
-            <h2>Reviews</h2>
-            <div className={styles.ritem}>
-              <div className={styles.user}>
-                <img className={styles.rpp} src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWFufGVufDB8fDB8fHww" alt="" />
-                <div className={styles.info}>
-                  <span>Timothée Hal Chalamet</span>
-                  <div className={styles.country}>
-                    <img src="https://www.happywalagift.com/wp-content/uploads/2015/08/India_flag-2016.jpg" alt="" width={15} />
-                    <span>India</span>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.stars}>
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <span className={styles.span1}>5</span>
-              </div>
-              <p className={styles.p}>You're amazing at using AI for art in movies. Your work makes movies special and tells stories in a cool way</p>
-              <div className={styles.helpful}>
-                <span>Helpful?</span>
-                <img src="https://icons.iconarchive.com/icons/iconsmind/outline/256/Like-icon.png" alt="" width={18} />
-                <span>Yes</span>
-                <img src="https://icons.iconarchive.com/icons/iconsmind/outline/256/Unlike-icon.png" alt="" width={18} />
-                <span>No</span>
-              </div>
-            </div>
-            <hr className={styles.hr1} />
-            <div className={styles.ritem}>
-              <div className={styles.user}>
-                <img className={styles.rpp} src="https://plus.unsplash.com/premium_photo-1703343320228-33af03d72511?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                <div className={styles.info}>
-                  <span>Anya Chalotra</span>
-                  <div className={styles.country}>
-                    <img src="https://www.happywalagift.com/wp-content/uploads/2015/08/India_flag-2016.jpg" alt="" width={15} />
-                    <span>India</span>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.stars}>
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <span className={styles.span1}>5</span>
-              </div>
-              <p className={styles.p}>Your AI art for movies is fantastic! It adds a special touch, making films visually stunning and storytelling unforgettable. Bravo!</p>
-              <div className={styles.helpful}>
-                <span>Helpful?</span>
-                <img src="https://icons.iconarchive.com/icons/iconsmind/outline/256/Like-icon.png" alt="" width={18} />
-                <span>Yes</span>
-                <img src="https://icons.iconarchive.com/icons/iconsmind/outline/256/Unlike-icon.png" alt="" width={18} />
-                <span>No</span>
-              </div>
-            </div>
-            <hr className={styles.hr1} />
-            <div className={styles.ritem}>
-              <div className={styles.user}>
-                <img className={styles.rpp} src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fG1hbnxlbnwwfHwwfHx8MA%3D%3D" alt="" />
-                <div className={styles.info}>
-                  <span>Sahil Chamar</span>
-                  <div className={styles.country}>
-                    <img src="https://www.happywalagift.com/wp-content/uploads/2015/08/India_flag-2016.jpg" alt="" width={15} />
-                    <span>India</span>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.stars}>
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <img src="/star.png" alt="" width={14} />
-                <span className={styles.span1}>5</span>
-              </div>
-              <p className={styles.p}>Master of visual enchantment, crafting cinematic magic with AI brushes. Your artworks elevate movie storytelling to extraordinary realms.</p>
-              <div className={styles.helpful}>
-                <span>Helpful?</span>
-                <img src="https://icons.iconarchive.com/icons/iconsmind/outline/256/Like-icon.png" alt="" width={18} />
-                <span>Yes</span>
-                <img src="https://icons.iconarchive.com/icons/iconsmind/outline/256/Unlike-icon.png" alt="" width={18} />
-                <span>No</span>
-              </div>
-            </div>
-          </div>
+          <Reviews gigId={id}/>
         </div>
         <div className={styles.right}>
           <div className={styles.price}>

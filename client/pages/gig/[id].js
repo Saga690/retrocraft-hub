@@ -3,19 +3,20 @@ import styles from '@/styles/Gig.module.css'
 import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query';
 import newRequest from '@/utils/newRequest';
+import { useRouter } from 'next/router';
 
 const Gig = () => {
 
-  const params = useParams();
-
-  const id = params.id;
+  const router = useRouter();
+  const id = router.query.id;
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['gig'],
     queryFn: () =>
       newRequest.get(`/gigs/single/${id}`).then(res => {
         return res.data;
-      })
+      }),
+      enabled: !!id,
   })
 
   const { isLoading: isLoadingUser, error: errorUser, data: dataUser } = useQuery({
@@ -23,7 +24,8 @@ const Gig = () => {
     queryFn: () =>
       newRequest.get(`/users/${data.userId}`).then(res => {
         return res.data;
-      })
+      }),
+      enabled: !!data?.userId,
   })
 
   return (
@@ -214,5 +216,15 @@ const Gig = () => {
     </div>
   )
 }
+
+export const getServerSideProps = async ({ params }) => {
+  const id = params.id;
+  const response = await newRequest.get(`/gigs/single/${id}`);
+  const data = response.data;
+
+  return {
+    props: { data },
+  };
+};
 
 export default Gig

@@ -101,3 +101,40 @@
     cursor: pointer;
     border-radius: 5px;
 }
+
+.add {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.inputForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input {
+    padding: 20px;
+}
+
+.select {
+    width: 200px;
+    padding: 20px;
+    align-self: flex-end;
+}
+
+.formButton {
+    align-self: flex-end;
+    width: 100px;
+    border: none;
+    padding: 10px;
+    color: white;
+    background-color: #1dbf73;
+    cursor: pointer;
+}
+
+.formButton:hover {
+    background-color: #1fa265;
+}

@@ -16,7 +16,7 @@ const Gig = () => {
       newRequest.get(`/gigs/single/${id}`).then(res => {
         return res.data;
       }),
-      enabled: !!id,
+    enabled: !!id,
   })
 
   const { isLoading: isLoadingUser, error: errorUser, data: dataUser } = useQuery({
@@ -25,7 +25,7 @@ const Gig = () => {
       newRequest.get(`/users/${data.userId}`).then(res => {
         return res.data;
       }),
-      enabled: !!data?.userId,
+    enabled: !!data?.userId,
   })
 
   return (
@@ -37,9 +37,9 @@ const Gig = () => {
           {isLoadingUser ? "loading..." : errorUser ? "Something went wrong!" : <div className={styles.user}>
             <img className={styles.pp} src={dataUser.img || "https://www.webinarleads4you.com/wp-content/uploads/2017/02/no-avatar-350x350-300x300.jpg"} alt="" />
             <span className={styles.username}>{dataUser.username}</span>
-            {! isNaN(data.totalStars / data.starNumber) && <div className={styles.stars}>
+            {!isNaN(data.totalStars / data.starNumber) && <div className={styles.stars}>
               {Array(Math.round(data.totalStars / data.starNumber)).fill().map((item, i) => (
-              <img src="/star.png" alt="" width={14} key={i} />
+                <img src="/star.png" alt="" width={14} key={i} />
               ))}
               <span className={styles.span1}>{Math.round(data.totalStars / data.starNumber)}</span>
             </div>
@@ -56,13 +56,13 @@ const Gig = () => {
               <img className={styles.pp} src={dataUser.img || "https://www.webinarleads4you.com/wp-content/uploads/2017/02/no-avatar-350x350-300x300.jpg"} alt="" width={14} />
               <div className={styles.info}>
                 <span>{dataUser.username}</span>
-                {! isNaN(data.totalStars / data.starNumber) && 
+                {!isNaN(data.totalStars / data.starNumber) &&
                   <div className={styles.stars}>
-                  {Array(Math.round(data.totalStars / data.starNumber)).fill().map((item, i) => (
-                    <img src="/star.png" alt="" width={14} key={i} />
-                  ))}
-                  <span className={styles.span1}>{Math.round(data.totalStars / data.starNumber)}</span>
-                </div>
+                    {Array(Math.round(data.totalStars / data.starNumber)).fill().map((item, i) => (
+                      <img src="/star.png" alt="" width={14} key={i} />
+                    ))}
+                    <span className={styles.span1}>{Math.round(data.totalStars / data.starNumber)}</span>
+                  </div>
                 }
                 <button className={styles.btn}>Contact Me</button>
               </div>
@@ -94,7 +94,7 @@ const Gig = () => {
               <p className={styles.p}>{data.desc}</p>
             </div>
           </div>}
-          <Reviews gigId={id}/>
+          <Reviews gigId={id} />
         </div>
         <div className={styles.right}>
           <div className={styles.price}>

@@ -27,10 +27,14 @@ const offerSchema = new Schema({
         type: String,
         required: true,
     },
-    isAccepted: {
+    isCompleted: {
         type: Boolean,
         default: false,
     },
+    payment_intent: {
+        type: String,
+        required: true,
+    }
 }, {
     timestamps: true,
 });

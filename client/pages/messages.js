@@ -56,7 +56,7 @@ const Messages = () => {
                         {data.map((c) => (
                             <tr className={`${styles.tr} ${((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) ? styles.active : ''}`} key={c.id} >
                                 <td className={styles.td}>J{currentUser?.isSeller ? c.buyerId : c.sellerId}</td>
-                                <td className={styles.td}><Link className={styles.link} href="/message">{c?.lastMessage?.substring(0, 100)}...</Link></td>
+                                <td className={styles.td}><Link className={styles.link} href={`/message/${c.id}`}>{c?.lastMessage?.substring(0, 100)}...</Link></td>
                                 <td className={styles.td}>{moment(c.updatedAt).fromNow()}</td>
                                 <td className={styles.td}>
                                     {((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) && (<button className={styles.btn} onClick={() => handleRead(c.id)}>Mark as Read</button>)}

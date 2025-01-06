@@ -1,20 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '@/styles/Messages.module.css'
 import Link from 'next/link';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import newRequest from '@/utils/newRequest';
+import moment from 'moment';
 
 const Messages = () => {
 
-    const currentUser = {
-        id: 1,
-        username: "John Doe",
-        isSeller: true,
-    };
+    const queryClient = useQueryClient();
 
-    const message = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt error ut cum molestiae perferendis illo dolorum illum facilis unde quasi"
+    const [currentUser, setCurrentUser] = useState(null);
+
+    useEffect(() => {
+        const userloc = JSON.parse(localStorage.getItem("currentUser"));
+        setCurrentUser(userloc);
+    }, [])
+
+    const { isLoading, error, data } = useQuery({
+        queryKey: ['conversations'],
+        queryFn: () =>
+            newRequest.get(`/conversations`).then(res => {
+                return res.data;
+            }),
+    })
+
+    const mutation = useMutation({
+        mutationFn: (id) => {
+            return newRequest.put(`/conversations/${id}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["conversations"])
+        }
+    })
+
+    const handleRead = (id) => {
+        mutation.mutate(id);
+    }
 
     return (
         <div className={styles.messages}>
-            <div className={styles.container}>
+            {isLoading ? "loading..." : error ? "Something went wrong!" : <div className={styles.container}>
                 <div className={styles.title}>
                     <h1>Messages</h1>
                 </div>
@@ -28,41 +53,19 @@ const Messages = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className={`${styles.tr} ${styles.active}`}>
-                            <td className={styles.td}>John Doe</td>
-                            <td className={styles.td}><Link className={styles.link} href="/message">{message.substring(0,100)}...</Link></td>
-                            <td className={styles.td}>1 hour ago</td>
-                            <td className={styles.td}>
-                                <button className={styles.btn}>Mark as Read</button>
-                            </td>
-                        </tr>
-                        <tr className={`${styles.tr} ${styles.active}`}>
-                            <td className={styles.td}>John Doe</td>
-                            <td className={styles.td}><Link className={styles.link} href="/message">{message.substring(0,100)}...</Link></td>
-                            <td className={styles.td}>2 hours ago</td>
-                            <td className={styles.td}>
-                                <button className={styles.btn}>Mark as Read</button>
-                            </td>
-                        </tr>
-                        <tr className={styles.tr}>
-                            <td className={styles.td}>John Doe</td>
-                            <td className={styles.td}><Link className={styles.link} href="/message">{message.substring(0,100)}...</Link></td>
-                            <td className={styles.td}>7 hours ago</td>
-                            <td className={styles.td}>
-                                {/* <button className={styles.btn}>Mark as Read</button> */}
-                            </td>
-                        </tr>
-                        <tr className={styles.tr}>
-                            <td className={styles.td}>John Doe</td>
-                            <td className={styles.td}><Link className={styles.link} href="/message">{message.substring(0,100)}...</Link></td>
-                            <td className={styles.td}>1 day ago</td>
-                            <td className={styles.td}>
-                                {/* <button className={styles.btn}>Mark as Read</button> */}
-                            </td>
-                        </tr>
+                        {data.map((c) => (
+                            <tr className={`${styles.tr} ${((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) ? styles.active : ''}`} key={c.id} >
+                                <td className={styles.td}>J{currentUser?.isSeller ? c.buyerId : c.sellerId}</td>
+                                <td className={styles.td}><Link className={styles.link} href="/message">{c?.lastMessage?.substring(0, 100)}...</Link></td>
+                                <td className={styles.td}>{moment(c.updatedAt).fromNow()}</td>
+                                <td className={styles.td}>
+                                    {((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) && (<button className={styles.btn} onClick={() => handleRead(c.id)}>Mark as Read</button>)}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
-            </div>
+            </div>}
         </div>
     )
 }

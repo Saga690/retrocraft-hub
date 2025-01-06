@@ -64,8 +64,7 @@ export const updateConversation = async (req, res, next) => {
 
         const updatedConversation = await Conversation.findOneAndUpdate({ id: req.params.id }, {
             $set: {
-                readBySeller: req.isSeller,
-                readByBuyer: !req.isSeller,
+                ...(req.isSeller ? { readBySeller: true } : { readByBuyer: true }),
             }
         }, { new: true });
 

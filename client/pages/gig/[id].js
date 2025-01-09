@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import newRequest from '@/utils/newRequest';
 import { useRouter } from 'next/router';
 import Reviews from '@/components/Reviews/Reviews';
+import Link from 'next/link';
 
 const Gig = () => {
 
@@ -122,7 +123,9 @@ const Gig = () => {
               </div>
             ))}
           </div>
-          <button className={styles.btn2}>Continue</button>
+          <Link href={`/pay/${id}`}>
+            <button className={styles.btn2} >Continue</button>
+          </Link>
         </div>
       </div>}
     </div>

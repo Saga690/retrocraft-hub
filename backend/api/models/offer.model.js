@@ -5,7 +5,6 @@ const offerSchema = new Schema({
     gigId: {
         type: String,
         required: true,
-        unique: true,
     },
     img: {
         type: String,

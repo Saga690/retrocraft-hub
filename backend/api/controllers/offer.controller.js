@@ -67,7 +67,7 @@ export const confirm = async (req, res, next) => {
         res.status(200).send("Your offer has been confirmed!");
         
     } catch (error) {
-        
+        next(error);
     }
 
 }

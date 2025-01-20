@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './Featured.module.css'
+import { useRouter } from 'next/router'
 
 const featured = () => {
+
+    const [input, setInput] = useState("")
+
+    const router = useRouter()
+
+    const handleSubmit = () => {
+        router.push(`/gigs?search=${input}`)
+    }
+
     return (
         <div className={styles.featured}>
             <div className={styles.container}>
@@ -10,9 +20,9 @@ const featured = () => {
                     <div className={styles.search}>
                         <div className={styles.searchInput}>
                             <img src="/search.jpg" alt="" width={16} />
-                            <input className={styles.input} type="text" placeholder="Try making a new film" />
+                            <input className={styles.input} type="text" placeholder="Try making a new film" onChange={(e) => setInput(e.target.value)} />
                         </div>
-                        <button className={styles.btn}>Search</button>
+                        <button className={styles.btn} onClick={handleSubmit}>Search</button>
                     </div>
                     <div className={styles.popular}>
                         <span>Popular:</span>

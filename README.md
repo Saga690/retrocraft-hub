@@ -1,7 +1,3 @@
-# IMG WINTER ASSIGNMENT 
-
-This is my submission for the Winter Assignment of Information Management Group (IMG), IIT Roorkee.
-
 ## Overview
 RetroCraft Hub is a platform where Producers act as digital casting directors, posting detailed project requirements for their film ventures. Skilled professionals, ranging from cinematographers to set designers, navigate the platform to discover and apply for opportunities that align with their expertise. Producers seeking talented individuals for their film projects will converge with skilled professionals looking for opportunities to contribute their expertise.
 

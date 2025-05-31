@@ -44,8 +44,9 @@ app.use((err, req, res, next) => {
     return res.status(errorStatus).send(errorMessage);
 })
 
+const port = process.env.PORT || 8800;
 
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
     connectToDB();
-    console.log(`Backend Server is listening at PORT ${process.env.PORT}`);
+    console.log(`Backend Server is listening at PORT ${port}`);
 })

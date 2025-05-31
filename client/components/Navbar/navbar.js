@@ -28,7 +28,7 @@ const navbar = () => {
     useEffect(() => {
         const userloc = JSON.parse(localStorage.getItem("currentUser"));
         setCurrentUser(userloc);
-    }, [])
+    }, [router.asPath])
 
     // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 

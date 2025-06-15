@@ -37,16 +37,22 @@ const Messages = () => {
         mutation.mutate(id);
     }
 
+    // Helper to fetch all usernames needed for the conversations
     const [usernames, setUsernames] = useState({});
-    const fetchUsername = async (userId) => {
-        if (!userId || usernames[userId]) return;
-        try {
-            const res = await newRequest.get(`/users/${userId}`);
-            setUsernames(prev => ({ ...prev, [userId]: res.data.username }));
-        } catch {
-            setUsernames(prev => ({ ...prev, [userId]: userId }));
-        }
-    };
+    useEffect(() => {
+        if (!data || !currentUser) return;
+        const idsToFetch = data.map(c => currentUser.isSeller ? c.buyerId : c.sellerId)
+            .filter(id => id && !usernames[id]);
+        if (idsToFetch.length === 0) return;
+        idsToFetch.forEach(async (userId) => {
+            try {
+                const res = await newRequest.get(`/users/${userId}`);
+                setUsernames(prev => ({ ...prev, [userId]: res.data.username }));
+            } catch {
+                setUsernames(prev => ({ ...prev, [userId]: userId }));
+            }
+        });
+    }, [data, currentUser]);
 
     return (
         <div className={styles.messages}>
@@ -66,7 +72,6 @@ const Messages = () => {
                     <tbody>
                         {data.map((c) => {
                             const otherUserId = currentUser?.isSeller ? c.buyerId : c.sellerId;
-                            useEffect(() => { fetchUsername(otherUserId); }, [otherUserId]);
                             return (
                                 <tr className={`${styles.tr} ${((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) ? styles.active : ''}`} key={c.id} >
                                     <td className={styles.td}>{usernames[otherUserId] || otherUserId}</td>

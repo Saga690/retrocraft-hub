@@ -18,9 +18,7 @@ const register = () => {
         isSeller: false,
         desc: "",
     });
-
-    // console.log(user);
-    
+    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         setUser(prev => {
@@ -36,6 +34,12 @@ const register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if (!user.username || !user.email || !user.password || !user.country) {
+            setError("* Username, Email, Password and Country are required fields.");
+            return;
+        }
+        setError("");
         const url = await upload(file);
 
         try {
@@ -45,7 +49,7 @@ const register = () => {
             })
             router.push("/login");
         } catch (error) {
-            console.log(error);
+            setError(error?.response?.data || "Registration failed. Please try again.");
         }
     }
 
@@ -54,15 +58,16 @@ const register = () => {
             <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.left}>
                     <h1 className={styles.h1}>Create a new account</h1>
-                    <label className={styles.label} htmlFor="">Username</label>
+                    {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+                    <label className={styles.label} htmlFor="">Username*</label>
                     <input className={styles.input} name="username" type="text" placeholder="johndoe" onChange={handleChange} />
-                    <label className={styles.label} htmlFor="">Email</label>
+                    <label className={styles.label} htmlFor="">Email*</label>
                     <input className={styles.input} name="email" type="email" placeholder="email" onChange={handleChange} />
-                    <label className={styles.label} htmlFor="">Password</label>
+                    <label className={styles.label} htmlFor="">Password*</label>
                     <input className={styles.input} name="password" type="password" onChange={handleChange} />
                     <label className={styles.label} htmlFor="">Profile Picture</label>
                     <input className={styles.input} type="file" onChange={(e) => setFile(e.target.files[0])} />
-                    <label className={styles.label} htmlFor="">Country</label>
+                    <label className={styles.label} htmlFor="">Country*</label>
                     <input className={styles.input} name="country" type="text" placeholder="Usa" onChange={handleChange} />
                     <button className={styles.btn} type="submit">Register</button>
                 </div>

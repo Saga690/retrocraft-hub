@@ -1,20 +1,20 @@
 import React from 'react'
 import Link from 'next/link'
 import styles from '@/styles/MyGigs.module.css'
-import getCurrentUser from '@/utils/getCurrentUser'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import newRequest from '@/utils/newRequest'
 
-const MyGigs = () => {
+// Get current user synchronously from localStorage
+const currentUser = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("currentUser")) : null;
 
-    const currentUser = getCurrentUser();
+const MyGigs = () => {
 
     const queryClient = useQueryClient();
 
     const { isLoading, error, data } = useQuery({
         queryKey: ['myGigs'],
         queryFn: () =>
-            newRequest.get(`/gigs?userId=${currentUser?.id}`).then(res => {
+            newRequest.get(`/gigs?userId=${currentUser?._id}`).then(res => {
                 return res.data;
             }),
     })

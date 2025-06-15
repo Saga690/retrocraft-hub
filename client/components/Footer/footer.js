@@ -67,7 +67,7 @@ const footer = () => {
         <div className={styles.bottom}>
           <div className={styles.left}>
             <h2>RetroCraft.</h2>
-            <span className={styles.lspan}>© RetroCraft International Lid. 2023</span>
+            <span className={styles.lspan}>© RetroCraft International Lid. 2025</span>
           </div>
           <div className={styles.right}>
             <div className={styles.social}>

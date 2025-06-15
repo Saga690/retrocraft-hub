@@ -49,7 +49,18 @@ const register = () => {
             })
             router.push("/login");
         } catch (error) {
-            setError(error?.response?.data || "Registration failed. Please try again.");
+            const errMsg = error?.response?.data || "Registration failed. Please try again.";
+            if (typeof errMsg === "string") {
+                if (errMsg.toLowerCase().includes("username")) {
+                    setError("User with same username exists, please choose a different username.");
+                } else if (errMsg.toLowerCase().includes("email")) {
+                    setError("User with same email already exists, please log in.");
+                } else {
+                    setError(errMsg);
+                }
+            } else {
+                setError("Registration failed. Please try again.");
+            }
         }
     }
 

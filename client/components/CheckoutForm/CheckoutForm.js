@@ -80,16 +80,18 @@ const CheckoutForm = () => {
     }
 
     return (
-        <form id="payment-form" onSubmit={handleSubmit}>
-            <LinkAuthenticationElement id="link-authentication-element" onChange={e => setEmail(e.target.value)} />
-            <PaymentElement id="payment-element" options={paymentElementOptions} />
-            <button disabled={isLoading || !stripe || !elements} id="submit">
-                <span id="button-text">
-                    {isLoading ? <div className={styles.spinner} id="spinner"></div> : "Pay now"}
-                </span>
-            </button>
-            {message && <div id="payment-message">{message}</div>}
-        </form>
+        <div className={styles.checkoutContainer}>
+            <form id="payment-form" onSubmit={handleSubmit}>
+                <LinkAuthenticationElement id="link-authentication-element" onChange={event => setEmail(event.value?.email || "")} />
+                <PaymentElement id="payment-element" options={paymentElementOptions} />
+                <button disabled={isLoading || !stripe || !elements} id="submit">
+                    <span id="button-text">
+                        {isLoading ? <div className={styles.spinner} id="spinner"></div> : "Pay now"}
+                    </span>
+                </button>
+                {message && <div id="payment-message">{message}</div>}
+            </form>
+        </div>
     )
 }
 

@@ -37,6 +37,17 @@ const Messages = () => {
         mutation.mutate(id);
     }
 
+    const [usernames, setUsernames] = useState({});
+    const fetchUsername = async (userId) => {
+        if (!userId || usernames[userId]) return;
+        try {
+            const res = await newRequest.get(`/users/${userId}`);
+            setUsernames(prev => ({ ...prev, [userId]: res.data.username }));
+        } catch {
+            setUsernames(prev => ({ ...prev, [userId]: userId }));
+        }
+    };
+
     return (
         <div className={styles.messages}>
             {isLoading ? "loading..." : error ? "Something went wrong!" : <div className={styles.container}>
@@ -53,16 +64,20 @@ const Messages = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((c) => (
-                            <tr className={`${styles.tr} ${((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) ? styles.active : ''}`} key={c.id} >
-                                <td className={styles.td}>J{currentUser?.isSeller ? c.buyerId : c.sellerId}</td>
-                                <td className={styles.td}><Link className={styles.link} href={`/message/${c.id}`}>{c?.lastMessage?.substring(0, 100)}...</Link></td>
-                                <td className={styles.td}>{moment(c.updatedAt).fromNow()}</td>
-                                <td className={styles.td}>
-                                    {((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) && (<button className={styles.btn} onClick={() => handleRead(c.id)}>Mark as Read</button>)}
-                                </td>
-                            </tr>
-                        ))}
+                        {data.map((c) => {
+                            const otherUserId = currentUser?.isSeller ? c.buyerId : c.sellerId;
+                            useEffect(() => { fetchUsername(otherUserId); }, [otherUserId]);
+                            return (
+                                <tr className={`${styles.tr} ${((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) ? styles.active : ''}`} key={c.id} >
+                                    <td className={styles.td}>{usernames[otherUserId] || otherUserId}</td>
+                                    <td className={styles.td}><Link className={styles.link} href={`/message/${c.id}`}>{c?.lastMessage?.substring(0, 100)}...</Link></td>
+                                    <td className={styles.td}>{moment(c.updatedAt).fromNow()}</td>
+                                    <td className={styles.td}>
+                                        {((currentUser?.isSeller && !c.readBySeller) || (!currentUser?.isSeller && !c.readByBuyer)) && (<button className={styles.btn} onClick={() => handleRead(c.id)}>Mark as Read</button>)}
+                                    </td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
             </div>}

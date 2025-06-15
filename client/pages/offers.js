@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styles from '@/styles/Offers.module.css'
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import newRequest from '@/utils/newRequest';
 import { useRouter } from 'next/router';
 
 const Offers = () => {
 
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
         const userloc = JSON.parse(localStorage.getItem("currentUser"));
         setCurrentUser(userloc);
-    }, [])
+        // Invalidate offers cache on mount to always show latest
+        queryClient.invalidateQueries(["offers"]);
+    }, [queryClient])
 
-    const { isLoading, error, data } = useQuery({
+    const { isLoading, error, data, refetch } = useQuery({
         queryKey: ['offers'],
         queryFn: () =>
             newRequest.get(`/offers`).then(res => {
@@ -32,9 +35,11 @@ const Offers = () => {
             router.push(`/message/${res.data.id}`);
         } catch (error) {
             if (error.response.status === 404) {
-                await newRequest.post(`/conversations`, { to: currentUser.isSeller ? buyerId : sellerId });
+                const createRes = await newRequest.post(`/conversations`, { to: currentUser.isSeller ? buyerId : sellerId });
+                router.push(`/message/${createRes.data.id}`);
+            } else {
+                console.error(error);
             }
-            router.push(`/message/${res.data.id}`);
         }
     }
 
@@ -56,24 +61,41 @@ const Offers = () => {
                     </thead>
                     <tbody>
                         {data.map((offer) => (
-                            <tr className={styles.tr} key={offer._id}>
-                                <td>
-                                    <img className={styles.img} src={offer.img} alt="" />
-                                </td>
-                                <td>{offer.title}</td>
-                                <td>{offer.price} INR</td>
-                                <td>{currentUser.isSeller ? offer.buyerId : offer.sellerId}</td>
-                                <td className={styles.actions}>
-                                    <img className={styles.imgDel} src="https://cdn-icons-png.flaticon.com/128/12559/12559741.png" alt="" onClick={() => handleContact(offer)} />
-                                    <img className={styles.imgDel} src="https://cdn-icons-png.flaticon.com/128/6861/6861362.png" alt="" />
-                                </td>
-                            </tr>
+                            <OfferRow offer={offer} currentUser={currentUser} handleContact={handleContact} key={offer._id} />
                         ))}
                     </tbody>
                 </table>
             </div>}
         </div>
     )
+}
+
+function OfferRow({ offer, currentUser, handleContact }) {
+    const [otherUserName, setOtherUserName] = useState("");
+    useEffect(() => {
+        const otherUserId = currentUser.isSeller ? offer.buyerId : offer.sellerId;
+        if (!otherUserId) return;
+        let ignore = false;
+        newRequest.get(`/users/${otherUserId}`)
+            .then(res => { if (!ignore) setOtherUserName(res.data.username); })
+            .catch(() => { if (!ignore) setOtherUserName(""); });
+        return () => { ignore = true; };
+    }, [offer, currentUser]);
+    const otherUserId = currentUser.isSeller ? offer.buyerId : offer.sellerId;
+    return (
+        <tr className={styles.tr}>
+            <td>
+                <img className={styles.img} src={offer.img} alt="" />
+            </td>
+            <td>{offer.title}</td>
+            <td>{offer.price} INR</td>
+            <td>{otherUserName || otherUserId}</td>
+            <td className={styles.actions}>
+                <img className={styles.imgDel} src="https://cdn-icons-png.flaticon.com/128/12559/12559741.png" alt="" onClick={() => handleContact(offer)} />
+                <img className={styles.imgDel} src="https://cdn-icons-png.flaticon.com/128/6861/6861362.png" alt="" />
+            </td>
+        </tr>
+    );
 }
 
 export default Offers

@@ -11,7 +11,7 @@ export const getOffers = async (req, res, next) => {
 
         const offers = await Offer.find({
             ...(req.isSeller ? { sellerId: req.userId } : { buyerId: req.userId }),
-            isCompleted: true
+            // isCompleted: true
         });
         res.status(200).send(offers);
 
